@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <title>무장애 IN 성동구</title>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+        
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+    </style>
+
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a id="firest_tab" class="nav-link active" data-toggle="tab" href="#mapContent">장소</a>
+        </li>
+        <li class="nav-item">
+            <a id="second_tab" class="nav-link" data-toggle="tab" href="#noticeContent">공지사항</a>
+        </li>
+        <li class="nav-item">
+            <a id="third_tab" class="nav-link" data-toggle="tab" href="#feedbackContent">피드백</a>
+        </li>
+        <li class="nav-item">
+
+            <button id="logout" type="button" class="btn btn-toolbar" data-toggle="modal" href="#dialog_logout">로그아웃</button>
+        </li>
+    </ul>
+    <script>
+        $(document).ready(function() {
+            var today = new Date(1608386754469);
+            var day = today.getDay();
+            var time = today.getFullYear() + "" + (today.getMonth() + 1) + "" + today.getDate() + "" + today.getHours() + "" + today.getMinutes()
+            console.log("updateNoticeList day : " + day + " , time : " + time);
+
+            $('#firest_tab').click();
+            $('#firest_tab').on("click", function(e) {
+                console.log("firest_tab");
+                $('#mapContent').show();
+                $('#noticeContent').hide();
+                $('#feedbackContent').hide();
+            });
+            $('#second_tab').on("click", function(e) {
+                console.log("second_tab");
+                $('#mapContent').hide();
+                $('#noticeContent').show();
+                $('#feedbackContent').hide();
+            });
+            $('#third_tab').on("click", function(e) {
+                console.log("third_tab");
+                $('#mapContent').hide();
+                $('#noticeContent').hide();
+                $('#feedbackContent').show();
+            });
+            $('#logout_ok').on("click", function(e) {
+                firebase.auth().signOut().then(function() {
+                    console.log("logout success");
+                }).catch(function(error) {
+                    console.error(error);
+                });
+            });
+            $('#logout_cancel').on("click", function(e) {
+                $('#dialog_logout').hide();
+            });
+
+
+        });
+    </script>
+
+
+    <!-- logout dialog-->
+    <div class="modal fade" id="dialog_logout" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p>로그아웃</p>
+                </div>
+                <div class="modal-body">
+                    <p>로그아웃 하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="logout_ok" type="button" class="btn btn-success" data-dismiss="modal">예</button>
+                    <button id="logout_cancel" type="button" class="btn btn-warning" data-dismiss="modal">아니오</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="mapContent">
+        <!-- top dropdown-->
+        <h1 id="category">카테고리</h1>
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
+    <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a id="category_all" tabindex="-1" href="#">전체 <span class="caret"></span></a>
+                </li>
+                <li class="dropdown-submenu">
+                    <a id="category1" tabindex="-1" href="#">음식점 <span class="caret"></span></a>
+                    <ul id="submenu1" class="dropdown-menu">
+                        <li><a tabindex="-1" href="#">전체</a></li>
+                        <li><a tabindex="-1" href="#">한식</a></li>
+                        <li><a tabindex="-1" href="#">중식</a></li>
+                        <li><a tabindex="-1" href="#">양식</a></li>
+                        <li><a tabindex="-1" href="#">일식</a></li>
+                        <li><a tabindex="-1" href="#">치킨</a></li>
+                        <li><a tabindex="-1" href="#">제과</a></li>
+                        <li><a tabindex="-1" href="#">카페</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a id="category2" tabindex="-1" href="#">기타<span class="caret"></span></a>
+                    <ul id="submenu2" class="dropdown-menu">
+                        <li><a tabindex="-1" href="#">전체</a></li>
+                        <li><a tabindex="-1" href="#">공원</a></li>
+                        <li><a tabindex="-1" href="#">이발소</a></li>
+                        <li><a tabindex="-1" href="#">스포츠</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a id="category3" tabindex="-1" href="#">체육시설<span class="caret"></span></a>
+                    <ul id="submenu3" class="dropdown-menu">
+                        <li><a tabindex="-1" href="#">체육시설</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- map -->
+        <div id="map" style="width:100%; height: 100vh;"></div>
+
+        <!-- input -->
+
+        <div class="col-sm-12 pt-3">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title"><i class="fas fa-square"></i>장소 추가</h4>
+                    <p class="card-catagory"></p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>카테고리</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
+                                            <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li class="dropdown-submenu">
+                                                    <a id="data_category1" tabindex="-1" href="#">음식점 <span class="caret"></span></a>
+                                                    <ul id="data_submenu1" class="dropdown-menu">
+                                                        <li><a tabindex="-1" href="#">한식</a></li>
+                                                        <li><a tabindex="-1" href="#">중식</a></li>
+                                                        <li><a tabindex="-1" href="#">양식</a></li>
+                                                        <li><a tabindex="-1" href="#">일식</a></li>
+                                                        <li><a tabindex="-1" href="#">치킨</a></li>
+                                                        <li><a tabindex="-1" href="#">제과</a></li>
+                                                        <li><a tabindex="-1" href="#">카페</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown-submenu">
+                                                    <a id="data_category2" tabindex="-1" href="#">기타<span class="caret"></span></a>
+                                                    <ul id="data_submenu2" class="dropdown-menu">
+                                                        <li><a tabindex="-1" href="#">공원</a></li>
+                                                        <li><a tabindex="-1" href="#">이발소</a></li>
+                                                        <li><a tabindex="-1" href="#">스포츠</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="dropdown-submenu">
+                                                    <a id="data_category3" tabindex="-1" href="#">체육시설<span class="caret"></span></a>
+                                                    <ul id="data_submenu3" class="dropdown-menu">
+                                                        <li><a tabindex="-1" href="#">체육시설</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                    <td>카테고리1</td>
+                                    <td>
+                                        <input id="input_category1" type="text" name="category1" class="form-control" value="" readonly>
+                                    </td>
+                                    <td>카테고리2</td>
+                                    <td>
+                                        <input id="input_category2" type="text" name="category2" class="form-control" value="" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>이름</td>
+                                    <td>
+                                        <input id="name" type="text" name="name" class="form-control" maxlength="10" value="">
+                                    </td>
+                                    <td>연락처</td>
+                                    <td>
+                                        <input id="contact" type="text" name="contact" class="form-control" maxlength="10" value="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>경도</td>
+                                    <td>
+                                        <input id="latitude" type="text" name="latitude" class="form-control" value="">
+                                    </td>
+                                    <td>위도</td>
+                                    <td>
+                                        <input id="longitude" type="text" name="longitude" class="form-control" value="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>주소</td>
+                                    <td>
+                                        <input id="address" type="text" name="address" class="form-control" value="">
+                                    </td>
+                                    <td>층</td>
+                                    <td>
+                                        <input id="input_floor" type="text" name="floor" class="form-control" value="" readonly>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
+                                            <span class="caret"></span></button>
+                                            <ul id="floor" class="dropdown-menu">
+                                                <li><a tabindex="-1" href="#">1층</a></li>
+                                                <li><a tabindex="-1" href="#">2층</a></li>
+                                                <li><a tabindex="-1" href="#">3층</a></li>
+                                                <li><a tabindex="-1" href="#">4층</a></li>
+                                                <li><a tabindex="-1" href="#">5층</a></li>
+                                                <li><a tabindex="-1" href="#">6층</a></li>
+                                                <li><a tabindex="-1" href="#">7층</a></li>
+                                                <li><a tabindex="-1" href="#">8층</a></li>
+                                                <li><a tabindex="-1" href="#">9층</a></li>
+                                                <li><a tabindex="-1" href="#">10층</a></li>
+                                                <li><a tabindex="-1" href="#">지하1층</a></li>
+                                                <li><a tabindex="-1" href="#">지하2층</a></li>
+                                                <li><a tabindex="-1" href="#">지하3층</a></li>
+                                                <li><a tabindex="-1" href="#">지하4층</a></li>
+                                                <li><a tabindex="-1" href="#">지하5층</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>설명</td>
+                                    <td>
+                                        <input id="summary" type="text" name="summary" class="form-control" value="">
+                                    </td>
+                                    <td>사용여부</td>
+                                    <td>
+                                        <input id="input_using" type="text" name="using" class="form-control" value="" readonly>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
+                                            <span class="caret"></span></button>
+                                            <ul id="using" class="dropdown-menu">
+                                                <li><a tabindex="-1" href="#">예</a></li>
+                                                <li><a tabindex="-1" href="#">아니오</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>기본 이미지</td>
+                                    <td>
+                                        <input type="file" id="image1" value="">
+                                    </td>
+                                    <td>
+                                        <button id="image1_reset">초기화</button>
+                                    </td>
+                                    <td>
+                                        <img id="image1_preview" src="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>경사로 이미지</td>
+                                    <td>
+                                        <input type="file" id="image2" value="">
+                                    </td>
+                                    <td>
+                                        <button id="image2_reset">초기화</button>
+                                    </td>
+                                    <td>
+                                        <img id="image2_preview" src="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>주차장 이미지</td>
+                                    <td>
+                                        <input type="file" id="image3" value="">
+                                    </td>
+                                    <td>
+                                        <button id="image3_reset">초기화</button>
+                                    </td>
+                                    <td>
+                                        <img id="image3_preview" src="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>화장실 이미지</td>
+                                    <td>
+                                        <input type="file" id="image4" value="">
+                                    </td>
+                                    <td>
+                                        <button id="image4_reset">초기화</button>
+                                    </td>
+                                    <td>
+                                        <img id="image4_preview" src="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>엘리베이터 이미지</td>
+                                    <td>
+                                        <input type="file" id="image5" value="">
+                                    </td>
+                                    <td>
+                                        <button id="image5_reset">초기화</button>
+                                    </td>
+                                    <td>
+                                        <img id="image5_preview" src="">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- input dialog-->
+        <div class="text-center mt-3">
+            <button id="submit" type="button" class="btn btn-success" data-toggle="modal" href="#dialog_submit">추가하기</button>
+            <button id="reset" type="button" class="btn btn-warning" data-toggle="modal">초기화</button>
+        </div>
+        <div class="modal fade" id="dialog_submit" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p>장소 추가</p>
+                    </div>
+                    <div class="modal-body">
+                        <p>장소를 추가하시겠습니까?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="submit_ok" type="button" class="btn btn-success" data-dismiss="modal">예</button>
+                        <button id="submit_cancel" type="button" class="btn btn-warning" data-dismiss="modal">아니오</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABmYv4KCOQfOSt3b6ViE2bvtZ_CYBx9mA&callback=initMap&region=kr"></script>
+        <script>
+            var db;
+            var map;
+            var markers = [];
+
+            // init map
+            function initMap() {
+                console.log("initMap");
+                var center = {
+                    lat: 37.56135681041004,
+                    lng: 127.03196137141782
+                };
+                map = new google.maps.Map(
+                    document.getElementById('map'), {
+                        zoom: 16,
+                        center: center
+                    });
+                var geoloccontrol = new klokantech.GeolocationControl(map, 16);
+                map.addListener("click", (e) => {
+                    console.log("click map : " + e.latLng);
+                    console.log("click lat : " + e.latLng.lat);
+                    console.log("click lon : " + e.latLng.lng);
+                    $("#latitude").val(e.latLng.lat);
+                    $("#longitude").val(e.latLng.lng);
+                    addTempMarker(e.latLng);
+
+                });
+                //initFirebase(map);
+                updateList("", "전체", "전체");
+                initDropdownEvent();
+
+            }
+
+            var tempMarker;
+
+            function addTempMarker(latLng) {
+                if (tempMarker != null) {
+                    tempMarker.setMap(null);
+                }
+
+                tempMarker = new google.maps.Marker({
+                    position: latLng,
+                    map: map,
+                    label: latLng.toString(),
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                });
+                tempMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: latLng.lat + "," + latLng.lng,
+                });
+                tempMarker.addListener("click", () => {
+                    infowindow.open(map, tempMarker);
+                });
+
+            }
+            // init firebase
+            function initFirebase(map) {
+                var firebaseConfig = {
+                    apiKey: "AIzaSyABmYv4KCOQfOSt3b6ViE2bvtZ_CYBx9mA",
+                    authDomain: "nodisable.firebaseapp.com",
+                    databaseURL: "https://nodisable.firebaseio.com",
+                    projectId: "nodisable",
+                    storageBucket: "nodisable.appspot.com",
+                    messagingSenderId: "518286416974",
+                    appId: "1:518286416974:web:3e85423664dc7887a2371f",
+                    measurementId: "G-66LMB3ZB9N"
+                };
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                db = firebase.firestore();
+                initAuth(firebase);
+                updateList("", "전체", "전체");
+                //initData(firebase, db, map, "", "");
+                initDropdown(firebase, db);
+
+
+            }
+
+            // init auth
+            function initAuth(firebase) {
+                var firebaseEmailAuth = firebase.auth();
+                firebaseEmailAuth.onAuthStateChanged(function(user) {
+
+                    if (user) {
+                        var user = firebase.auth().currentUser;
+                        var name, email, photoUrl, uid, emailVerified;
+                        if (user != null) {
+                            name = user.displayName;
+                            email = user.email;
+                            photoUrl = user.photoURL;
+                            emailVerified = user.emailVerified;
+                            uid = user.uid;
+                        }
+
+
+                    } else {
+                        alert("Not Logined");
+                    }
+                });
+
+            }
+
+            // init firestore
+            function initData(firebase, db, map, category1, category2) {
+                console.log("initData category1 : " + category1 + " , category2 : " + category2);
+
+                db.collection("location").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        var data = doc.data();
+                        console.log("category1:" + category1 + " , category2 : " + category2 + " ,category1:" + data.category1 + ", category2 : " + data.category2);
+
+                        if (category1.trim().localeCompare("전체") == 0) {
+                            addMarker(data);
+                        } else {
+                            if (category1.trim().localeCompare(data.category1.trim()) == 0) {
+                                if (category2.trim().localeCompare(data.category2.trim()) == 0 || category2.trim().localeCompare("전체") == 0) {
+                                    addMarker(data);
+                                }
+                            }
+                        }
+                    });
+                });
+                map.setZoom(15);
+            }
+
+            // add marker
+            function addMarker(data) {
+                console.log("addMarker");
+                if (typeof data.latitude != "number" || typeof data.longitude != "number") {
+                    console.log("addMarker lat or lon is invalid");
+                    return;
+                }
+                var pos = {
+                    lat: data.latitude,
+                    lng: data.longitude
+                };
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    label: data.name
+                });
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: data.name,
+                });
+                marker.addListener("click", () => {
+                    infowindow.open(map, marker);
+                    fillData(data);
+                });
+                markers.push(marker);
+
+            }
+
+            function fillData(data) {
+
+            }
+
+            // TODO:initDropdonwList
+            function initDropdown(firebase, db) {
+                var db = firebase.firestore();
+                db.collection("category").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        console.log(`${doc.id} => ${doc.data()}`);
+
+                    });
+                });
+
+                initDropdownEvent();
+            }
+
+            function initDropdownEvent() {
+                // top & input
+                $(document).ready(function() {
+                    $('#category_all').on("click", function(e) {
+                        updateList("", "전체", "전체");
+
+                    });
+
+                    // initDropdown
+
+                    var categoryArr = [
+                        ['category1', 'submenu1'],
+                        ['category2', 'submenu2'],
+                        ['category3', 'submenu3']
+                    ];
+
+                    initSeletCategoryDropdown(categoryArr, categoryArr[0][0], categoryArr[0][1]);
+                    initSeletCategoryDropdown(categoryArr, categoryArr[1][0], categoryArr[1][1]);
+                    initSeletCategoryDropdown(categoryArr, categoryArr[2][0], categoryArr[2][1]);
+                    var dataCategoryArr = [
+                        ['data_category1', 'data_submenu1'],
+                        ['data_category2', 'data_submenu2'],
+                        ['data_category3', 'data_submenu3']
+                    ];
+
+                    initSeletCategoryDropdown(dataCategoryArr, dataCategoryArr[0][0], dataCategoryArr[0][1]);
+                    initSeletCategoryDropdown(dataCategoryArr, dataCategoryArr[1][0], dataCategoryArr[1][1]);
+                    initSeletCategoryDropdown(dataCategoryArr, dataCategoryArr[2][0], dataCategoryArr[2][1]);
+
+                    function initSeletCategoryDropdown(arr, category, submenu) {
+                        console.log("initSeletCategoryDropdown category : " + category + " , submenu : " + submenu);
+                        $("#" + category).prop("click", null);
+                        $("#" + category).on("click", function(e) {
+                            console.log("onclick1");
+                            for (var i = 0; i < arr.length; i++) {
+                                console.log(arr[i][0] + " , " + category);
+                                if (arr[i][0] == category) {
+                                    console.log("toggle");
+                                    $("#" + arr[i][0]).next('ul').toggle();
+                                } else {
+                                    console.log("hide");
+                                    $("#" + arr[i][0]).next('ul').hide();
+                                }
+                            }
+                            e.stopPropagation();
+                            e.preventDefault();
+                            var category1 = e.target.textContent;
+                            $("#" + submenu).prop("click", null);
+                            $("#" + submenu).on("click", function(e) {
+                                var category2 = e.target.textContent;
+                                updateList(category, category1, category2);
+                                $("#" + submenu).hide();
+                                e.stopPropagation();
+                                e.preventDefault();
+                            });
+                        });
+                    }
+
+                    initFloorDropdown();
+                    initUsingDropdown();
+
+                    function initFloorDropdown() {
+                        $("#floor").prop("click", null);
+                        $("#floor").on("click", function(e) {
+                            console.log("e : " + e.target.textContent);
+                            e.stopPropagation();
+                            e.preventDefault();
+                            $("#input_floor").val(e.target.textContent);
+                        });
+                    }
+
+                    function initUsingDropdown() {
+                        $("#using").prop("click", null);
+                        $("#using").on("click", function(e) {
+                            console.log("e : " + e.target.textContent);
+                            e.stopPropagation();
+                            e.preventDefault();
+                            $("#input_using").val(e.target.textContent);
+                        });
+                    }
+
+                    // initImage
+                    $(function() {
+                        initPreview("image1", "image1_preview", "image1_reset");
+                        initPreview("image2", "image2_preview", "image2_reset");
+                        initPreview("image3", "image3_preview", "image3_reset");
+                        initPreview("image4", "image4_preview", "image4_reset");
+                        initPreview("image5", "image5_preview", "image5_reset");
+                    });
+
+                    function initPreview(image, preview, reset) {
+                        $("#" + image).prop("change", null);
+                        $("#" + image).on("change", function() {
+                            showPreview(this, preview);
+                        });
+                        $("#" + reset).on("click", function(e) {
+                            $("#" + image).val("");
+                            $("#" + preview).attr('src', "");
+                        });
+                    }
+
+                    function showPreview(input, preview) {
+                        console.log("showPreview");
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function(e) {
+                                $("#" + preview).attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+
+                });
+            }
+
+            function updateList(category, category1, category2) {
+                console.log("updateList " + category + " , " + category1 + " , " + category2);
+                var res = category.indexOf("data_");
+                console.log("updateList res : " + res);
+                if (category.indexOf("data_") == -1) {
+                    if (category1.trim().localeCompare("전체") == 1) {
+                        $('#category').text(category1 + "-" + category2);
+                    } else {
+                        $('#category').text(category1);
+                    }
+
+                    for (var i = 0; i < markers.length; i++) {
+                        markers[i].setMap(null);
+                    }
+
+                    //initData(firebase, db, map, category1, category2);
+                } else {
+                    console.log("updateList set input");
+                    $('#input_category1').val(category1);
+                    $('#input_category2').val(category2);
+                }
+
+            };
+
+            function LocationData(
+                category1,
+                category2,
+                name,
+                contact,
+                latitude,
+                longitude,
+                summary,
+                using,
+                floor,
+                address,
+                image1,
+                image2,
+                image3,
+                image4,
+                image5,
+            ) {
+                this.category1 = category1;
+                this.category2 = category2;
+                this.name = name;
+                this.contact = contact;
+                this.latitude = latitude;
+                this.longitude = longitude;
+                this.summary = summary;
+                this.using = using;
+                this.floor = floor;
+                this.address = address;
+                this.image1 = image1;
+                this.image2 = image2;
+                this.image3 = image3;
+                this.image4 = image4;
+                this.image5 = image5;
+            }
+            $(document).ready(function() {
+
+
+                $("#reset").on("click", function(e) {
+                    console.log("reset click");
+                    resetAll();
+                    console.log("reset click after");
+                });
+
+                function resetAll() {
+                    console.log("resetAll");
+
+                    $("#data_category1").val("");
+                    $("#data_category2").val("");
+                    $("#data_category3").val("");
+
+                    $('#input_category1').val("");
+                    $('#input_category2').val("");
+
+                    $('#latitude').val("");
+                    $('#longitude').val("");
+                    $('#name').val("");
+                    $('#contact').val("");
+                    $('#address').val("");
+                    $('#summary').val("");
+                    $('#input_floor').val("");
+                    $('#input_using').val("");
+
+
+                    $("#image1").val("");
+                    $("#image1_reset").val("");
+                    $("#image1_preview").attr('src', "");
+                    $("#image2").val("");
+                    $("#image2_reset").val("");
+                    $("#image2_preview").attr('src', "");
+                    $("#image3").val("");
+                    $("#image3_reset").val("");
+                    $("#image3_preview").attr('src', "");
+                    $("#image4").val("");
+                    $("#image4_reset").val("");
+                    $("#image4_preview").attr('src', "");
+                    $("#image5").val("");
+                    $("#image5_reset").val("");
+                    $("#image5_preview").attr('src', "");
+
+
+                }
+
+                $("#submit_cancel").on("click", function(e) {
+                    $('#dialog_submit').hide();
+                });
+
+                $("#submit_ok").on("click", function(e) {
+                    console.log("submit");
+                    var category1 = $('input#input_category1').val();
+                    var category2 = $('input#input_category2').val();
+                    var name = $('input#name').val();
+                    var contact = $('input#contact').val();
+                    var latitude = $('input#latitude').val();
+                    var longitude = $('input#longitude').val();
+                    var summary = $('input#summary').val();
+                    var using = $('#input_using').val();
+                    var floor = $('#input_floor').val();
+                    var address = $('input#address').val();
+                    var image1 = $('input#image1').val();
+                    var image2 = $('input#image2').val();
+                    var image3 = $('input#image3').val();
+                    var image4 = $('input#image4').val();
+                    var image5 = $('input#image5').val();
+                    console.log("category1 : " + category1);
+                    console.log("category2 : " + category2);
+                    console.log("name : " + name);
+                    console.log("contact : " + contact);
+                    console.log("latitude : " + latitude);
+                    console.log("longitude : " + longitude);
+                    console.log("summary : " + summary);
+                    console.log("using : " + using);
+                    console.log("floor : " + floor);
+                    console.log("address : " + address);
+                    console.log("image1 : " + image1);
+                    console.log("image2 : " + image2);
+                    console.log("image3 : " + image3);
+                    console.log("image4 : " + image4);
+                    console.log("image5 : " + image5);
+                    var data = new LocationData(
+                        category1,
+                        category2,
+                        name,
+                        contact,
+                        latitude,
+                        longitude,
+                        summary,
+                        using,
+                        floor,
+                        address,
+                        image1,
+                        image2,
+                        image3,
+                        image4,
+                        image5,
+                    );
+                    requestUpdateData(data);
+                });
+            });
+
+            function requsetUploadFile(docu, id) {
+                console.log("requestUploadFile docu :" + docu + " , id :" + id);
+                var storageRef = firebase.storage().ref();
+
+                var files = $("#" + id).prop("files");
+                var fileName = $("#" + id).val();
+                var clean = fileName.split('\\').pop();
+                if (clean == "") {
+                    console.log("requestUploadFile empty");
+                    return;
+                }
+
+                storageRef.child("images/" + clean)
+                    .put(files[0]).then((snapshot) => {
+                        snapshot.ref.getDownloadURL().then(url => {
+                            console.log(' * new url', url);
+                            var value;
+                            var key;
+                            let valueMap
+                            switch (id) {
+                                case "image1":
+                                    valueMap = {
+                                        "image.base": url
+                                    }
+                                    break;
+                                case "image2":
+                                    valueMap = {
+                                        "image.elevator": url
+                                    }
+                                    break;
+                                case "image3":
+                                    valueMap = {
+                                        "image.gyungsaro": url
+                                    }
+                                    break;
+                                case "image4":
+                                    valueMap = {
+                                        "image.parking": url
+                                    }
+                                    break;
+                                case "image5":
+                                    valueMap = {
+                                        "image.restroom": url
+                                    }
+                                    break;
+
+                            }
+
+                            db.collection("location").doc(docu).update(valueMap).then(function() {
+                                console.log(docu + " , " + id + " upload success");
+                            }).catch(function(error) {
+                                console.log(error);
+                            });
+                        })
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+            }
+
+
+
+            function requestUpdateData(data) {
+                var today = new Date();
+                var sec = today.getSeconds();
+                if (sec < 10) {
+                    sec = "0" + sec;
+                }
+                var docu = "docu_" + today.getFullYear() + "" + (today.getMonth() + 1) + "" + today.getDate() + "" + today.getHours() + "" + today.getMinutes() + "" + sec;
+                var category1 = data.category1;
+                console.log("docu : " + docu + " , category1 : " + category1);
+                db.collection("location").doc(docu).set({
+                    category1: data.category1,
+                    category2: data.category2,
+                    name: data.name,
+                    contact: data.contact,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                    image: {
+                        base: data.image1,
+                        elevator: data.image2,
+                        gyungsaro: data.image3,
+                        parking: data.image4,
+                        restroom: data.image5
+                    },
+
+                }).then(function() {
+                    console.log("cloud success");
+                    requsetUploadFile(docu, "image1");
+                    requsetUploadFile(docu, "image2");
+                    requsetUploadFile(docu, "image3");
+                    requsetUploadFile(docu, "image4");
+                    requsetUploadFile(docu, "image5");
+                    resetAll();
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }
+
+            function resetAll() {
+
+            }
+        </script>
+
+    </div>
+
+
+    <div class="tab-pane fade" id="noticeContent">
+        <h1 id="title">공지사항</h1>
+        <div class="container">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody id="tbody">
+                            <tr>
+                                <td>번호</td>
+                                <td>제목</td>
+                                <td>시간</td>
+                            </tr>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-12 pt-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>제목</tr>
+                                <tr><input id="notice_title" type="text" name="name" class="form-control" maxlength="10" value=""></tr>
+                                <tr>내용</tr>
+                                <tr><input id="notice_content" type="text" name="name" class="form-control" maxlength="10" value=""></tr>
+                                <br>
+                                <div class="text-center mt-3">
+                                    <button id="notice_submit" type="button" class="btn btn-success" data-toggle="modal" href="#dialog_notice">추가</button>
+                                </div>
+                                <!-- notice dialog-->
+                                <div class="modal fade" id="dialog_notice" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <p>공지사항</p>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>공지사항을 추가하시겠습니까?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button id="notice_ok" type="button" class="btn btn-success" data-dismiss="modal">예</button>
+                                                <button id="notice_cancel" type="button" class="btn btn-warning" data-dismiss="modal">아니오</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="tab-pane fade" id="feedbackContent">
+        <p>Curabitur dignissim quis nunc vitae laoreet. Etiam ut mattis leo, vel fermentum tellus. Sed sagittis rhoncus venenatis. Quisque commodo consectetur faucibus. Aenean eget ultricies justo.</p>
+    </div>
+    </div>
+
+
+</body>
+
+</html>

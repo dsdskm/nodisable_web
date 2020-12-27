@@ -1,0 +1,29 @@
+{
+  "name": "nodisable",
+  "version": "1.0.0",
+  "description": "init",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^4.5.3",
+    "express": "^4.17.1",
+    "firebase": "^8.2.1",
+    "firebaseui": "^4.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsdskm/nodisable_web.git"
+  },
+  "keywords": [
+    "nodisable"
+  ],
+  "author": "dsdskm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dsdskm/nodisable_web/issues"
+  },
+  "homepage": "https://github.com/dsdskm/nodisable_web#readme"
+}
