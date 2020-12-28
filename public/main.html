@@ -134,7 +134,7 @@
                     <a id="category_all" tabindex="-1" href="#">전체 <span class="caret"></span></a>
                 </li>
                 <li class="dropdown-submenu">
-                    <a id="category1" tabindex="-1" href="#">음식점 <span class="caret"></span></a>
+                    <a id="category1" tabindex="-1" href="#">음식점/화장실 <span class="caret"></span></a>
                     <ul id="submenu1" class="dropdown-menu">
                         <li><a tabindex="-1" href="#">전체</a></li>
                         <li><a tabindex="-1" href="#">한식</a></li>
@@ -144,6 +144,7 @@
                         <li><a tabindex="-1" href="#">치킨</a></li>
                         <li><a tabindex="-1" href="#">제과</a></li>
                         <li><a tabindex="-1" href="#">카페</a></li>
+                        <li><a tabindex="-1" href="#">화장실</a></li>
                     </ul>
                 </li>
                 <li class="dropdown-submenu">
@@ -193,7 +194,7 @@
                                             <span class="caret"></span></button>
                                             <ul class="dropdown-menu">
                                                 <li class="dropdown-submenu">
-                                                    <a id="data_category1" tabindex="-1" href="#">음식점 <span class="caret"></span></a>
+                                                    <a id="data_category1" tabindex="-1" href="#">음식점/화장실<span class="caret"></span></a>
                                                     <ul id="data_submenu1" class="dropdown-menu">
                                                         <li><a tabindex="-1" href="#">한식</a></li>
                                                         <li><a tabindex="-1" href="#">중식</a></li>
@@ -202,6 +203,7 @@
                                                         <li><a tabindex="-1" href="#">치킨</a></li>
                                                         <li><a tabindex="-1" href="#">제과</a></li>
                                                         <li><a tabindex="-1" href="#">카페</a></li>
+                                                        <li><a tabindex="-1" href="#">화장실</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="dropdown-submenu">
@@ -626,6 +628,7 @@
 
             // init firestore
             function initData(firebase, db, map, category1, category2) {
+                console.log("initData");
                 markers = [];
                 db.collection("location").get().then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
@@ -634,15 +637,18 @@
                         console.log("category1 : " + category1 + " , category2 : " + category2 + " , data category1 : " + data.category1 + " , data category2 : " + data.category2);
                         if (category1.trim().localeCompare("전체") == 0) {
                             addMarker(data, doc.id);
+                            $('#count').text("-" + category2 + " " + markers.length + "개");
                         } else {
-                            if (category1.trim().localeCompare(data.category1.trim()) == 0) {
-                                if (category2.trim().localeCompare(data.category2.trim()) == 0 || category2.trim().localeCompare("전체") == 0) {
+                            if (category1.trim().includes(data.category1.trim()) != 0) {
+                                if (category2.trim().includes(data.category2.trim()) != 0 || category2.trim().localeCompare("전체") == 0) {
                                     addMarker(data, doc.id);
+                                    $('#count').text("-" + category2 + " " + markers.length + "개");
                                 }
                             }
                         }
                     });
                 });
+                $('#count').text("-" + category2 + " " + markers.length + "개");
                 map.setZoom(16);
             }
 
@@ -675,7 +681,7 @@
                     fillData(data, docId);
                 });
                 markers.push(marker);
-                $('#count').text(markers.length + "개");
+
             }
 
             function fillData(data, docId) {
@@ -759,9 +765,9 @@
                     initSeletCategoryDropdown(dataCategoryArr, dataCategoryArr[2][0], dataCategoryArr[2][1]);
 
                     function initSeletCategoryDropdown(arr, category, submenu) {
+                        console.log("initSeletCategoryDropdown category : " + category + " , submenu : " + submenu);
 
-                        $("#" + category).prop("click", null);
-                        $("#" + category).on("click", function(e) {
+                        $("#" + category).off().on("click", function(e) {
 
                             for (var i = 0; i < arr.length; i++) {
 
@@ -776,8 +782,8 @@
                             e.stopPropagation();
                             e.preventDefault();
                             var category1 = e.target.textContent;
-                            $("#" + submenu).prop("click", null);
-                            $("#" + submenu).on("click", function(e) {
+                            $("#" + submenu).off().on("click", function(e) {
+                                console.log("submeu click : " + submenu);
                                 var category2 = e.target.textContent;
                                 updateList(category, category1, category2);
                                 $("#" + submenu).hide();
@@ -846,7 +852,7 @@
             }
 
             function updateList(category, category1, category2) {
-
+                console.log("updateList category : " + category + " , category1 : " + category1 + " , category2 : " + category2);
                 var res = category.indexOf("data_");
 
                 if (category.indexOf("data_") == -1) {
