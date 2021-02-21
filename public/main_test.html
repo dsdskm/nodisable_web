@@ -100,7 +100,7 @@
         } );
     </script>
 
-    <!-- logout dialog-->
+    <!-- logout permission dialog-->
     <div class="modal fade" id="dialog_permission" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -134,145 +134,144 @@
             </div>
         </div>
     </div>
+    <!-- delete category dialog-->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label id="category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
+                  
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- delete subcategory dialog-->
+    <div class="modal fade" id="deleteSubCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label id="sub_category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
+                  
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="sub_category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- add category dialog-->
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">카테고리</label>
+                  <textarea id="category_add_text" class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="category_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <br>
+    <!-- add sub category dialog-->
+    <div class="modal fade" id="subCategoryModal" tabindex="-1" role="dialog" aria-labelledby="subCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="subCategoryModalLabel">상세 카테고리 추가</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">상세 카테고리</label>
+                  <textarea id="subCategory_add_text" class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="subCategory_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="mapContent">
         <!-- top dropdown-->
-        <div class="col">
-            <br>
             
-            <div class="row">
-                <div>
-                    <span style="font-size:2em" id="category">카테고리</span>
-                    <br>
-                    <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
-                    <button id="category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteCategoryModal'>삭제</button>
-                </div>
-                <div>
-                    <span style="font-size:2em" id="subCategory"></span>
-                    <br>
-                    <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
-                    <button id="sub_category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteSubCategoryModal'>삭제</button>
-                </div>
-                <div>
-                    <span style="font-size:1.5em" id="count">개</span>
-                </div>
+        <div class="row">
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="category">카테고리</span>
+                <br>
+                <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
+                <button id="category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteCategoryModal'>삭제</button>
             </div>
-            <div class="dropdown">
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="subCategory"></span>
+                <br>
+                <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
+                <button id="sub_category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteSubCategoryModal'>삭제</button>
+            </div>
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="count">개</span>
+            </div>
+        </div>
+           
+        </div>
+        <br>
+        <div class="row">
+            
+            <div style="left: 16px;" class="dropdown">
                 <button id="dropdown_btn" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
                     <span class="caret"></span></button>
                 <ul class="dropdown-menu" id="category_dropdown">
                     <!-- by initDropdown -->
                 </ul>
             </div>
-        </div>
-        
-        <!-- delete category dialog-->
-        <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label id="category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
-                      
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
-                </div>
-              </div>
-            </div>
-        </div>
-
-        <!-- delete subcategory dialog-->
-        <div class="modal fade" id="deleteSubCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label id="sub_category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
-                      
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="sub_category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
-                </div>
-              </div>
-            </div>
-        </div>
-
-        <!-- add category dialog-->
-        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label">카테고리</label>
-                      <textarea id="category_add_text" class="form-control" id="message-text"></textarea>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="category_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        <br>
-        <!-- add sub category dialog-->
-        <div class="modal fade" id="subCategoryModal" tabindex="-1" role="dialog" aria-labelledby="subCategoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="subCategoryModalLabel">상세 카테고리 추가</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label">상세 카테고리</label>
-                      <textarea id="subCategory_add_text" class="form-control" id="message-text"></textarea>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="subCategory_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        <br>
-        
-            
-        
-        <div class="row">
+            <br>
             <div class=" col-lg-4">
 
                 <input id="search_address" type="search" class="form-control" placeholder="검색할 주소" value="" />
@@ -284,6 +283,7 @@
                 <button id="search_submit_place" type="button" value="장소 검색" class="btn btn-light">장소 검색</button>
             </div>
         </div>
+        <br>
         <button id="map_refresh" type="button" class="btn btn-success" data-toggle="modal">지도 업데이트</button>
         <br>
         <!-- map -->
@@ -316,43 +316,6 @@
                                                 data-toggle="dropdown">선택
                                                 <span class="caret"></span></button>
                                             <ul class="dropdown-menu" id="category_dropdown_data">
-
-                                                <!-- <li class="dropdown-submenu">
-                                                    <a id="data_category1" tabindex="-1" href="#">음식점<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu1" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">한식</a></li>
-                                                        <li><a tabindex="-1" href="#">중식</a></li>
-                                                        <li><a tabindex="-1" href="#">양식</a></li>
-                                                        <li><a tabindex="-1" href="#">일식</a></li>
-                                                        <li><a tabindex="-1" href="#">치킨</a></li>
-                                                        <li><a tabindex="-1" href="#">제과</a></li>
-                                                        <li><a tabindex="-1" href="#">카페</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category2" tabindex="-1" href="#">기타<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu2" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">공원</a></li>
-                                                        <li><a tabindex="-1" href="#">이발소</a></li>
-                                                        <li><a tabindex="-1" href="#">스포츠</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category3" tabindex="-1" href="#">체육시설<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu3" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">체육시설</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category4" tabindex="-1" href="#">화장실<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu4" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">화장실</a></li>
-                                                    </ul>
-                                                </li> -->
 
                                             </ul>
                                         </div>
@@ -1221,7 +1184,6 @@
                         $( "#category_add_text" ).val( "" );
                         addCategoryData( firebase, value );
                         
-
                     });
 
                     $("#subCategory_add_btn").click(function () {
@@ -1400,7 +1362,7 @@
             }
 
             function updateList( category, category1, category2 ) {
-                //console.log("updateList category : " + category + " , category1 : " + category1 + " , category2 : " + category2);
+                console.log("updateList category : " + category + " , category1 : " + category1 + " , category2 : " + category2);
                 var res = category.indexOf( "data_" );
 
                 if ( category.indexOf( "data_" ) == -1 ) {
@@ -1678,7 +1640,9 @@
                 var map ={};
                 map[category1] = firebase.firestore.FieldValue.arrayUnion(category2)
                 console.log("map[category] : "+map[category1]);
-                db.collection("category").doc("category").update(map);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
                 
             }
 
@@ -1691,7 +1655,9 @@
                 map[category] = firebase.firestore.FieldValue.delete();
                 db.collection("category").doc("category").update(map);
                 map["카테고리"] = firebase.firestore.FieldValue.arrayRemove(category);
-                db.collection("category").doc("category").update(map);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
                 
             }
 
@@ -1702,7 +1668,9 @@
                 }
                 var map ={};
                 map[category] = firebase.firestore.FieldValue.arrayRemove(category2);
-                db.collection("category").doc("category").update(map);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
                 
             }
 
@@ -1733,8 +1701,11 @@
                         db.collection( "category" ).doc( "category" ).set( map, { merge: true } );
                         db.collection( "category" ).doc( "category" ).update( {
                             "카테고리": firebase.firestore.FieldValue.arrayUnion( category )
-                        } );
+                        } ).then(()=>{
+                            location.reload(true);
+                        });
                     }
+                    
                     
                 });
                 
