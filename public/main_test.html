@@ -1498,6 +1498,7 @@
                     db.collection( "location" ).doc( current_docu ).delete().then( function () {
                         console.log( "delete success" );
                         updateList( "", "전체", "전체" );
+                        location.reload(true);
                     } ).catch( function ( error ) {
                         console.error( error );
                     } );

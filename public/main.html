@@ -38,6 +38,12 @@
             left: 100%;
             margin-top: -1px;
         }
+        .top_title_layout{
+            margin-right: 10px;
+        }
+        
+
+        
     </style>
 
     <ul class="nav nav-tabs">
@@ -128,71 +134,144 @@
             </div>
         </div>
     </div>
-    <div class="tab-pane fade" id="mapContent">
-        <!-- top dropdown-->
-        <span style="font-size:2em" id="category">카테고리</span> <span style="font-size:1.5em" id="count">개</span>
-        <div>*카테고리 삭제 기능은 현재 구현중입니다.(추가만 됨)</div>
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu" id="category_dropdown">
-                <!-- by initDropdown -->
-            </ul>
+    <!-- delete category dialog-->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label id="category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
+                  
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
+            </div>
+          </div>
         </div>
+    </div>
 
-        <!-- add category dialog-->
-        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+    <!-- delete subcategory dialog-->
+    <div class="modal fade" id="deleteSubCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 삭제</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label id="sub_category_delete_text" for="message-text" class="col-form-label">카테고리 삭제</label>
+                  
                 </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label">카테고리</label>
-                      <textarea id="category_add_text" class="form-control" id="message-text"></textarea>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="category_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
-                </div>
-              </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="sub_category_delete_ok_btn" type="button" class="btn btn-primary" data-dismiss="modal">삭제</button>
             </div>
           </div>
-        <br>
-        <!-- add sub category dialog-->
-        <div class="modal fade" id="subCategoryModal" tabindex="-1" role="dialog" aria-labelledby="subCategoryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="subCategoryModalLabel">상세 카테고리 추가</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+        </div>
+    </div>
+
+    <!-- add category dialog-->
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">카테고리</label>
+                  <textarea id="category_add_text" class="form-control" id="message-text"></textarea>
                 </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="message-text" class="col-form-label">상세 카테고리</label>
-                      <textarea id="subCategory_add_text" class="form-control" id="message-text"></textarea>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  <button id="subCategory_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
-                </div>
-              </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="category_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
             </div>
           </div>
+        </div>
+      </div>
+    <br>
+    <!-- add sub category dialog-->
+    <div class="modal fade" id="subCategoryModal" tabindex="-1" role="dialog" aria-labelledby="subCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="subCategoryModalLabel">상세 카테고리 추가</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">상세 카테고리</label>
+                  <textarea id="subCategory_add_text" class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              <button id="subCategory_add_btn" type="button" class="btn btn-primary" data-dismiss="modal">추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mapContent">
+        <!-- top dropdown-->
+            
+        <div class="row">
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="category">카테고리</span>
+                <br>
+                <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
+                <button id="category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteCategoryModal'>삭제</button>
+            </div>
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="subCategory"></span>
+                <br>
+                <!--<button type='button' class='btn btn-light' data-toggle='modal' data-target='#modifyCategoryModal'>수정</button>-->
+                <button id="sub_category_delete_btn" type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteSubCategoryModal'>삭제</button>
+            </div>
+            <div class=" col-lg-4">
+                <span style="font-size:2em" id="count">개</span>
+            </div>
+        </div>
+           
+        </div>
         <br>
         <div class="row">
+            
+            <div style="left: 16px;" class="dropdown">
+                <button id="dropdown_btn" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu" id="category_dropdown">
+                    <!-- by initDropdown -->
+                </ul>
+            </div>
+            <br>
             <div class=" col-lg-4">
 
                 <input id="search_address" type="search" class="form-control" placeholder="검색할 주소" value="" />
@@ -204,10 +283,8 @@
                 <button id="search_submit_place" type="button" value="장소 검색" class="btn btn-light">장소 검색</button>
             </div>
         </div>
-
         <br>
-        <br>
-        <button id="map_refresh" type="button" class="btn btn-success" data-toggle="modal">업데이트</button>
+        <button id="map_refresh" type="button" class="btn btn-success" data-toggle="modal">지도 업데이트</button>
         <br>
         <!-- map -->
         <!-- <div id="map" style="width:100%; height: 100vh;"></div> -->
@@ -239,43 +316,6 @@
                                                 data-toggle="dropdown">선택
                                                 <span class="caret"></span></button>
                                             <ul class="dropdown-menu" id="category_dropdown_data">
-
-                                                <!-- <li class="dropdown-submenu">
-                                                    <a id="data_category1" tabindex="-1" href="#">음식점<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu1" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">한식</a></li>
-                                                        <li><a tabindex="-1" href="#">중식</a></li>
-                                                        <li><a tabindex="-1" href="#">양식</a></li>
-                                                        <li><a tabindex="-1" href="#">일식</a></li>
-                                                        <li><a tabindex="-1" href="#">치킨</a></li>
-                                                        <li><a tabindex="-1" href="#">제과</a></li>
-                                                        <li><a tabindex="-1" href="#">카페</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category2" tabindex="-1" href="#">기타<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu2" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">공원</a></li>
-                                                        <li><a tabindex="-1" href="#">이발소</a></li>
-                                                        <li><a tabindex="-1" href="#">스포츠</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category3" tabindex="-1" href="#">체육시설<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu3" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">체육시설</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="dropdown-submenu">
-                                                    <a id="data_category4" tabindex="-1" href="#">화장실<span
-                                                            class="caret"></span></a>
-                                                    <ul id="data_submenu4" class="dropdown-menu">
-                                                        <li><a tabindex="-1" href="#">화장실</a></li>
-                                                    </ul>
-                                                </li> -->
 
                                             </ul>
                                         </div>
@@ -865,20 +905,24 @@
                             //addMarker(data, doc.id);
                             
                             addNaverMarker( data, doc.id, map );
-                            $( '#count' ).text( "-" + category2 + " " + markers.length + "개" );
+                            $( '#subCategory' ).text( category2);
+                            $( '#count' ).text(" "+markers.length + "개" );
                         } else {
                             if ( category1.trim().includes( data.category1.trim() ) != 0 ) {
                                 if ( category2.trim().includes( data.category2.trim() ) != 0 || category2.trim().localeCompare( "전체" ) == 0 ) {
                                     //addMarker(data, doc.id);
                                     
                                     addNaverMarker( data, doc.id, map );
-                                    $( '#count' ).text( "-" + category2 + " " + markers.length + "개" );
+                                    $( '#subCategory' ).text( category2);
+                                    $( '#count' ).text(" "+markers.length + "개" );
                                 }
                             }
                         }
                     } );
                 } );
-                $( '#count' ).text( "-" + category2 + " " + markers.length + "개" );
+                $( '#subCategory' ).text( category2);
+                $( '#count' ).text(" "+markers.length + "개" );
+               
                 map.setZoom( 16 );
             }
 
@@ -1089,6 +1133,7 @@
                         script+="<button id='";
                         script+="add_"+s;
                         script+="' type='button' class='btn btn-light' data-toggle='modal' data-target='#subCategoryModal'>추가</button>";
+                        script+="</li>";
                         script+="</ul>";
                         script+="</li>";
                         console.log("script",script);
@@ -1097,7 +1142,7 @@
                     }
                     // add
                     script="<li class='dropdown-submenu'>";
-                    script+="<button type='button' class='btn btn-light' data-toggle='modal' data-target='#categoryModal'>카테고리 추가</button>";
+                    script+="<button type='button' class='btn btn-light' data-toggle='modal' data-target='#categoryModal' style=''>추가</button>";
                     script+="</li>";
                     $('#category_dropdown').append( script);
                     initDropdownEvent(firebase,db);
@@ -1105,18 +1150,23 @@
                     console.log( error );
                 } );
 
+                $('#category_delete_btn').hide();
+                $('#sub_category_delete_btn').hide();
 
             }
             var categoryArr = [];
             var dataCategoryArr = [];
-            var currentCategory="";
+            var currentSubmenu="";
             var currentCategoryText="";
+            var currentCategoryText2="";
             function initDropdownEvent(firebase,db) {
                 console.log( "initDropdownEvent" );
                 // top & input
                 $( document ).ready( function () {
                   
                     $( '#category_all' ).on( "click", function ( e ) {
+                        $('#category_delete_btn').hide();
+                        $('#sub_category_delete_btn').hide();
                         updateList( "", "전체", "전체" );
 
                     } );
@@ -1131,29 +1181,49 @@
                     $("#category_add_btn").click(function () {
                         var value = $("#category_add_text").val();
                         console.log("category_add click "+value);
-                        $("#category_add_text" ).val("");
-                       addCategoryData(firebase,value);
-
+                        $( "#category_add_text" ).val( "" );
+                        addCategoryData( firebase, value );
+                        
                     });
 
                     $("#subCategory_add_btn").click(function () {
-                        
                         var category1 = currentCategoryText;
                         var category2 = $("#subCategory_add_text").val();
-                        console.log("subCategory_add click category1 : "+category1+" , category2 : "+category2+" , currentCategoryText : "+currentCategoryText);
+                        console.log("subCategory_add click category1 : "+category1+" , category2 : "+category2);
                         $("#subCategory_add_text" ).val("");
-                       addSubCategoryData(firebase,currentCategoryText,category2);
+                       addSubCategoryData(firebase,category1,category2);
+                       
 
                     });
+
+                    $("#category_delete_ok_btn").click(function () {
+                        var value = currentCategoryText;
+                        console.log("category_delete click "+value);
+                        $( "#category_delete_text" ).val( "" );
+                        deleteCategoryData( firebase, value );
+                    
+
+                    });
+
+                    $("#sub_category_delete_ok_btn").click(function () {
+                        var c = currentCategoryText;
+                        var value = currentCategoryText2;
+                        console.log("sub_category_delete click "+value);
+                        $( "#category_delete_text" ).val( "" );
+                        deleteSubCategoryData( firebase, c,value );
+                    
+                    });
+
+                   
 
                     for(index=0;index<dataCategoryArr.length;index++){
                         initSeletCategoryDropdown( dataCategoryArr, dataCategoryArr[index][0], dataCategoryArr[index][1] );
                     }
                     
                     function initSeletCategoryDropdown( arr, category, submenu ) {
-                    
+                        console.log("initSeletCategoryDropdown arr : "+arr+" , category : "+category+" , submenu : "+submenu);
                         $( "#" + category ).off().on( "click", function ( e ) {
-
+                            console.log("initSeletCategoryDropdown onClick "+category+" , submenu : "+submenu);
                             for ( var i = 0; i < arr.length; i++ ) {
 
                                 if ( arr[i][0] == category ) {
@@ -1169,14 +1239,24 @@
                             var category1 = e.target.textContent;
                             $( "#" + submenu ).off().on( "click", function ( e ) {
                                 console.log( "submenu click : " + submenu );
-                                currentCategory = submenu;
+                                currentSubmenu = submenu;
                                 var category2 = e.target.textContent;
-                                console.log("category2 : "+category2);
+                                currentCategoryText2 = category2;
                                 if(category2==="추가"){
                                     $("#subCategoryModal").modal();
                                 } else {
                                     updateList( category, category1, category2 );
                                 }
+
+                                var c = $( '#category' ).text();
+                                if ( c != "전체" ) {
+                                    $('#category_delete_btn').show();
+                                    $('#sub_category_delete_btn').show();
+                                } else {
+                                    $('#category_delete_btn').hide();
+                                    $('#sub_category_delete_btn').hide();
+                                }
+                                
                                 $( "#" + submenu ).hide();
                                 e.stopPropagation();
                                 e.preventDefault();
@@ -1185,20 +1265,42 @@
                         } );
                     }
 
-                    // add sub category
+                    // init add sub category
                     $('#subCategoryModal').on('show.bs.modal', function (event) {
-                        if(currentCategory===""){
+                        if(currentSubmenu===""){
                             return;
                         }
                         
                         var modal = $(this);
                         
-                        var parentCategory = categoryArr[Number(currentCategory.replace("submenu",""))-1];
+                        var parentCategory = categoryArr[Number(currentSubmenu.replace("submenu",""))-1];
                         currentCategoryText = $("#"+parentCategory[0]).text();
 
-                        console.log("subCategoryModal on current category : "+currentCategory+" , parentCategory : "+parentCategory+" , currentCategoryText : "+currentCategoryText);
+                        console.log("subCategoryModal on current category : "+currentSubmenu+" , parentCategory : "+parentCategory);
                         modal.find('.modal-title').text(currentCategoryText);
                     })
+
+                    // init delete category
+                    $('#deleteCategoryModal').on('show.bs.modal', function (event) {
+                        
+                        var modal = $( this );
+                        var category = $('#category').text();
+                        currentCategoryText = category;
+                        console.log("deleteCategoryModal on "+category);
+                        $( '#category_delete_text' ).text( category + "을(를) 삭제하시겠습니까?" );
+                        
+                    } )
+
+                    // init delete sub category
+                    $('#deleteSubCategoryModal').on('show.bs.modal', function (event) {
+                        var modal = $( this );
+                        var category = currentCategoryText;
+                        console.log("deleteSubCategoryModal on "+category);
+                        var parentCategory = categoryArr[Number(currentSubmenu.replace("submenu",""))-1];
+                        currentCategoryText = $("#"+parentCategory[0]).text();
+                        $( '#sub_category_delete_text' ).text( currentCategoryText2 + "을(를) 삭제하시겠습니까?" );
+                        
+                    } )
 
                     initFloorDropdown();
                     initUsingDropdown();
@@ -1260,7 +1362,7 @@
             }
 
             function updateList( category, category1, category2 ) {
-                //console.log("updateList category : " + category + " , category1 : " + category1 + " , category2 : " + category2);
+                console.log("updateList category : " + category + " , category1 : " + category1 + " , category2 : " + category2);
                 var res = category.indexOf( "data_" );
 
                 if ( category.indexOf( "data_" ) == -1 ) {
@@ -1396,6 +1498,7 @@
                     db.collection( "location" ).doc( current_docu ).delete().then( function () {
                         console.log( "delete success" );
                         updateList( "", "전체", "전체" );
+                        location.reload(true);
                     } ).catch( function ( error ) {
                         console.error( error );
                     } );
@@ -1530,7 +1633,7 @@
             }
 
             function addSubCategoryData(firebase,category1,category2){
-                console.log("addSubCategoryData category1 : "+category1+" ,category2 :"+category2+" , currentCategoryText : "+currentCategoryText);
+                console.log("addSubCategoryData category1 : "+category1+" ,category2 :"+category2);
                 if(category2===''){
                     return;    
                 }
@@ -1538,7 +1641,38 @@
                 var map ={};
                 map[category1] = firebase.firestore.FieldValue.arrayUnion(category2)
                 console.log("map[category] : "+map[category1]);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
+                
+            }
+
+            function deleteCategoryData(firebase,category){
+                console.log("deleteCategoryData category :"+category);
+                if(category===''){
+                    return;    
+                }
+                var map ={};
+                map[category] = firebase.firestore.FieldValue.delete();
                 db.collection("category").doc("category").update(map);
+                map["카테고리"] = firebase.firestore.FieldValue.arrayRemove(category);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
+                
+            }
+
+            function deleteSubCategoryData(firebase,category,category2){
+                console.log("deleteSubCategoryData category :"+category+" , category2 : "+category2);
+                if(category===''){
+                    return;    
+                }
+                var map ={};
+                map[category] = firebase.firestore.FieldValue.arrayRemove(category2);
+                db.collection("category").doc("category").update(map).then(()=>{
+                            location.reload(true);
+                        });
+                
             }
 
             function addCategoryData(firebase,category){
@@ -1568,10 +1702,14 @@
                         db.collection( "category" ).doc( "category" ).set( map, { merge: true } );
                         db.collection( "category" ).doc( "category" ).update( {
                             "카테고리": firebase.firestore.FieldValue.arrayUnion( category )
-                        } );
+                        } ).then(()=>{
+                            location.reload(true);
+                        });
                     }
                     
+                    
                 });
+                
                 
             }
 
