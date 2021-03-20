@@ -1551,7 +1551,7 @@
                 } );
             } );
 
-            async function requsetUploadFile( docu, id ) {
+            async function requestUploadFile( docu, id,field_name ) {
 
                 var storageRef = firebase.storage().ref();
 
@@ -1559,11 +1559,35 @@
                 var fileName = $( "#" + id ).val();
                 var clean = fileName.split( '\\' ).pop();
                 var preview = $( "#" + id + "_preview" ).attr( 'src' );
-
-                console.log( "requsetUploadFile id : " + id + " , fileName : " + fileName + " , clean : " + clean + " , preview : " + preview );
+                //중복 체크
+                
+                var current_file = storageRef.child('images/'+clean);
+                console.log("current file : "+current_file.fullPath);
+                var old_url = "";
+                if(current_file.fullPath.indexOf('.png') > 0){
+                    //old_url = await current_file.getDownloadURL();
+                    current_file.getDownloadURL().then(function(url){
+                        old_url = url;
+                    }).catch(function(error){
+                        console.log(error);
+                    });
+                    setTimeout(() => console.log("sleep for old image check"), 1000)
+                }
+                console.log("requestUploadFile fileName : "+fileName+" , field_name : "+field_name+" , clean : "+clean+" , old_url: "+old_url);
+                /*
+                current_file.getDownloadURL().then(function(url){
+                    console.log("old_url: "+old_url);
+                    old_url = url;
+                }).catch(function(error){
+                    console.log(error);
+                });
+                */
+                // var old_file_url= await current_file.getDownloadURL();
+                // console.log("current file : "+current_file.fullPath+" , url : "+old_file_url);
+                
                 if ( clean.trim() == "" && preview.trim() != "" ) {
                     uploadCount++;
-                    console.log( "requsetUploadFile empty return" );
+                    console.log( "requestUploadFile empty return" );
                     if ( uploadCount == UPLOAD_MAX_COUNT ) {
                         requestComplete();
                         uploadCount = 0;
@@ -1579,6 +1603,7 @@
                 await storageRef.child( "images/" + clean )
                     .put( files[0] ).then( ( snapshot ) => {
                         snapshot.ref.getDownloadURL().then( async url => {
+                            updateOldImage(id,old_url,url,field_name);
                             updateImage( id, url, docu );
                         } )
                     } ).catch( ( error ) => {
@@ -1586,7 +1611,25 @@
                     } );
             }
 
+            async function updateOldImage( id, old_url, url,field_name ) {
+                console.log("updateOldImage old_url :"+old_url+" , new url: "+url);
+                if(old_url===""){
+                    return;
+                }
+                let tmp = db.collection("locationImage").where(field_name,'==',old_url);
+                tmp.get().then((querySnapshot)=>{
+                    querySnapshot.forEach((doc)=>{
+                        console.log("doc id :"+doc+","+doc.data());
+                        db.collection("location").doc(doc).update({
+                            field_name:url
+                        });
+                    });
+                });
+
+            }
+
             async function updateImage( id, url, docu ) {
+                console.log("updateImage id:"+id+",url:"+url+",docu:"+docu);
                 var value;
                 var key;
                 let valueMap
@@ -1759,15 +1802,15 @@
                         floor: data.floor
                     } ).then( function () {
                         console.log( "firestore update success" );
-                        // requsetUploadFile(docu, "image1");
+                        // requestUploadFile(docu, "image1");
                         // console.log("req1 end");
-                        requsetUploadFile( docu, "image2" );
+                        requestUploadFile( docu, "image2","data.image.gyungsaro");
                         console.log( "req2 end" );
-                        requsetUploadFile( docu, "image3" );
+                        requestUploadFile( docu, "image3","data.image.parking");
                         console.log( "req3 end" );
-                        requsetUploadFile( docu, "image4" );
+                        requestUploadFile( docu, "image4","data.image.restroom");
                         console.log( "req4 end" );
-                        requsetUploadFile( docu, "image5" );
+                        requestUploadFile( docu, "image5","data.image.elevator");
                         console.log( "req5 end" );
                         resetAll();
                     } ).catch( function ( error ) {
@@ -1786,15 +1829,15 @@
                         floor: data.floor
                     } ).then( function () {
                         console.log( "firestore input success" );
-                        // requsetUploadFile(docu, "image1");
+                        // requestUploadFile(docu, "image1");
                         // console.log("req1 end");
-                        requsetUploadFile( docu, "image2" );
+                        requestUploadFile( docu, "image2","data.image.gyungsaro");
                         console.log( "req2 end" );
-                        requsetUploadFile( docu, "image3" );
+                        requestUploadFile( docu, "image3","data.image.parking");
                         console.log( "req3 end" );
-                        requsetUploadFile( docu, "image4" );
+                        requestUploadFile( docu, "image4","data.image.restroom");
                         console.log( "req4 end" );
-                        requsetUploadFile( docu, "image5" );
+                        requestUploadFile( docu, "image5","data.image.elevator");
                         console.log( "req5 end" );
                         resetAll();
                     } ).catch( function ( error ) {
