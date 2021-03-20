@@ -893,6 +893,10 @@
             // init firestore
             function initData( firebase, db, map, category1, category2 ) {
                 console.log( "initData" );
+                var index=0;
+                for(index=0;index<markers.length;index++){
+                    markers[index].setMap(null);
+                }
                 markers = [];
                 list = [];
                 db.collection( "location" ).get().then( ( querySnapshot ) => {
@@ -928,6 +932,7 @@
 
             // add naver marker
             function addNaverMarker( data, docId, map ) {
+                console.log("addNaverMarker docId : "+docId+" , data : "+data.name);
                 if ( typeof data.latitude != "number" || typeof data.longitude != "number" ) {
                     //console.log("addMarker lat or lon is invalid");
                     return;
@@ -1033,16 +1038,30 @@
                 // $("#image1_preview").attr('src', data.image.base);
                 $( "#image2" ).val( "" );
                 $( "#image2_reset" ).val( "" );
-                $( "#image2_preview" ).attr( 'src', data.image.gyungsaro );
+
+                if (data.image !== undefined || data.image.gyungsaro !== undefined) {
+                    $( "#image2_preview" ).attr( 'src', data.image.gyungsaro );
+                }
+                
                 $( "#image3" ).val( "" );
                 $( "#image3_reset" ).val( "" );
-                $( "#image3_preview" ).attr( 'src', data.image.parking );
+                if (data.image !== undefined || data.image.parking !== undefined) {
+                    $( "#image3_preview" ).attr( 'src', data.image.parking );
+                }
+               
                 $( "#image4" ).val( "" );
                 $( "#image4_reset" ).val( "" );
-                $( "#image4_preview" ).attr( 'src', data.image.restroom );
+
+                if (data.image !== undefined || data.image.restroom !== undefined) {
+                    $( "#image4_preview" ).attr( 'src', data.image.restroom );
+                }
+                
                 $( "#image5" ).val( "" );
                 $( "#image5_reset" ).val( "" );
-                $( "#image5_preview" ).attr( 'src', data.image.elevator );
+                if (data.image !== undefined || data.image.elevator !== undefined) {
+                    $( "#image5_preview" ).attr( 'src', data.image.elevator );
+                }
+                
             }
 
             
