@@ -1152,6 +1152,9 @@
                         script+="<button id='";
                         script+="add_"+s;
                         script+="' type='button' class='btn btn-light' data-toggle='modal' data-target='#subCategoryModal'>추가</button>";
+                        script+="<button id='";
+                        script+="delete_"+s;
+                        script+="' type='button' class='btn btn-light' data-toggle='modal' data-target='#deleteCategoryModal'>삭제</button>";
                         script+="</li>";
                         script+="</ul>";
                         script+="</li>";
@@ -1263,6 +1266,10 @@
                                 currentCategoryText2 = category2;
                                 if(category2==="추가"){
                                     $("#subCategoryModal").modal();
+                                } else if(category2=="삭제"){
+                                    $("#deleteCategoryModal").modal();
+                                    currentCategoryText = category1;
+                                    $( '#category_delete_text' ).text( category1 + "을(를) 삭제하시겠습니까?" );
                                 } else {
                                     updateList( category, category1, category2 );
                                 }
